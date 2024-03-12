@@ -1,0 +1,22 @@
+
+name: dojo-2024-03-12
+
+channels:
+- conda-forge
+
+dependencies:
+- pip >= 24.0
+- python >= 3.11.7
+- pip:
+  - black[jupyter] >= 24.2.0  # essential
+  - isort >= 5.13.2  # essential
+  - mypy >= 1.9.0  # essential
+  - pandas >= 2.2.1
+  - pandas-stubs >= 2.2.0.240218
+  - pytest-cov >= 4.1.0  # essential
+  - ruamel.yaml >= 0.18.6
+  - ruff >= 0.3.2  # essential
+  - sqlalchemy >= 1.4.51
+  - typer >= 0.9.0
+  - tqdm >= 4.66.2
+  - uszipcode >= 1.0.1
