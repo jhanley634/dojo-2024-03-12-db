@@ -1,5 +1,8 @@
 
-all:
+all: data/title.basics.tsv.gz
+
+%.tsv.gz:
+	$(MAKE) -C data/
 
 SHELL := bash
 PROJECT := $(shell basename $(CURDIR))

@@ -1,10 +1,13 @@
 *~
-.coverage.*
 .coverage
+.coverage.*
 .hypothesis/
 .idea/
 .ipynb_checkpoints/
 .pytype/
 __pycache__/
+data/*.parquet
+data/*.tsv
+data/*.tsv.gz
 htmlcov/
 talk/out/*.html
