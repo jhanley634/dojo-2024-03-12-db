@@ -48,8 +48,8 @@ def _xform_movie(df: pd.DataFrame) -> pd.DataFrame:
     df = df[df.isAdult == "0"]
     df = df.drop(columns=["titleType", "originalTitle", "isAdult", "endYear"])
     df = df[df.genres.str.len() > 2]
-    df = df[pd.to_numeric(df.startYear, errors="coerce") > 1990]
-    df = df[pd.to_numeric(df.runtimeMinutes, errors="coerce") > 60]
+    df = df[pd.to_numeric(df.startYear, errors="coerce") >= 1920]
+    df = df[pd.to_numeric(df.runtimeMinutes, errors="coerce") >= 60]
     df["startYear"] = pd.to_numeric(df.startYear)
     df["runtimeMinutes"] = pd.to_numeric(df.runtimeMinutes)
     df = df.rename(

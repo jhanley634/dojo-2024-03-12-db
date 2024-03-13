@@ -9,7 +9,7 @@ from sqlalchemy import Select, TextClause, text
 from src.db import get_engine, get_session, get_tables
 
 
-def example_join() -> None:
+def example_join_query() -> None:
 
     movie, actor, movie_actor = get_tables()
 
@@ -18,7 +18,7 @@ def example_join() -> None:
             sa.select(actor, movie)
             .join(movie_actor, movie_actor.c.actor_id.is_(actor.c.id))
             .join(movie, movie_actor.c.movie_id.is_(movie.c.id))
-            .where(movie_actor.c.actor_id < "nm00001")
+            .where(movie_actor.c.actor_id.is_("nm0000001"))
             .order_by(movie_actor.c.movie_id)
         )
         print("\n".join(map(str, sess.execute(explain(q)))))
@@ -39,4 +39,4 @@ def explain(q: Select[Any]) -> TextClause:
 
 
 if __name__ == "__main__":
-    example_join()
+    example_join_query()

@@ -1,7 +1,7 @@
 #! /usr/bin/env SQLALCHEMY_WARN_20=1 python
 # Copyright 2024 John Hanley. MIT licensed.
 """Loads rows into a database."""
-
+from time import time
 from warnings import filterwarnings
 
 from sqlalchemy import Index
@@ -21,7 +21,12 @@ def load_rows() -> None:
 
     movie, actor, movie_actor = get_tables()
 
-    Index("am_idx", movie_actor.c.actor_id, movie_actor.c.movie_id).create(get_engine())
+    Index(
+        "am_idx",
+        movie_actor.c.actor_id,
+        movie_actor.c.movie_id,
+        unique=True,
+    ).create(get_engine())
 
     with get_session() as sess:
         sess.execute(movie.delete())
@@ -29,16 +34,17 @@ def load_rows() -> None:
         movie_df = get_movie_df().drop(columns=["genres"])
         movie_df.to_sql("movie", conn.connection, if_exists="append", index=False)
 
+    t0 = time()
     with get_session() as sess:
         sess.execute(actor.delete())
         sess.execute(movie_actor.delete())
-        for _, row in get_actor_df().iterrows():
+        for i, row in get_actor_df().iterrows():
             titles = row.titles
             d = row.to_dict()
             del d["titles"]
             sess.execute(actor.insert().values(d))
             if titles.count(",") >= 4:
-                print(row.id, end="\t", flush=True)
+                print(f"{i:9d}   {row.id}\t{time() - t0:.3f}")
                 sess.commit()
             for title in titles.split(","):
                 sess.execute(
