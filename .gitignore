@@ -9,5 +9,6 @@ __pycache__/
 data/*.parquet
 data/*.tsv
 data/*.tsv.gz
+data/imdb.db
 htmlcov/
 talk/out/*.html
