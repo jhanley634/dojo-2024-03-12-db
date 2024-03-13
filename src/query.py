@@ -1,10 +1,12 @@
 #! /usr/bin/env python
 # Copyright 2024 John Hanley. MIT licensed.
 """Demonstrates JOIN queries."""
+from typing import Any
 
 import sqlalchemy as sa
+from sqlalchemy import Select, TextClause, text
 
-from src.db import get_session, get_tables
+from src.db import get_engine, get_session, get_tables
 
 
 def example_join() -> None:
@@ -20,8 +22,22 @@ def example_join() -> None:
             .order_by(actor.c.born)
             .limit(90)
         )
+        for row in sess.execute(explain(q)):
+            print(row._asdict())
         for row in sess.execute(q):
             print(row._asdict())
+
+
+def explain(q: Select[Any]) -> TextClause:
+    """Obtains a query plan."""
+    compiled = str(
+        q.compile(
+            get_engine(),
+            dialect=get_engine().dialect,
+            compile_kwargs={"literal_binds": True},
+        )
+    )
+    return text(f"EXPLAIN QUERY PLAN {compiled}")
 
 
 if __name__ == "__main__":
