@@ -10,7 +10,7 @@ import pandas as pd
 DATA_DIR = Path("data").resolve()
 
 
-def get_actor() -> pd.DataFrame:
+def get_actor_df() -> pd.DataFrame:
     """Returns a DataFrame of Internet Movie DataBase actor name details."""
     return _read_parquet(DATA_DIR / "name.basics.tsv.gz", _xform_actor)
 
@@ -36,7 +36,7 @@ def _xform_actor(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def get_movie() -> pd.DataFrame:
+def get_movie_df() -> pd.DataFrame:
     """Returns a DataFrame of IMDB movie title details."""
     return _read_parquet(DATA_DIR / "title.basics.tsv.gz", _xform_movie)
 
@@ -77,24 +77,26 @@ def _read_parquet(
     name = in_file.name.removesuffix(".tsv.gz")
     cache_file = DATA_DIR / f"{name}.parquet"
     if not cache_file.exists():
-        print(f"Reading {in_file} ...")
+        print(f"Reading      {in_file} ...")
         df = pd.read_csv(in_file, sep="\t", low_memory=False)
 
         print(f"Transforming {in_file} ...")
         df = xform(df)
 
-        print(f"Creating {cache_file} ...")
+        print(f"Creating     {cache_file} ...")
         df.to_parquet(cache_file)
-        print(".")
 
     return pd.read_parquet(cache_file)
 
 
 def main() -> None:
-    print(actor := get_actor())
-    print(movie := get_movie())
-    print(actor.dtypes)
-    print(movie.dtypes)
+    actor = get_actor_df()
+    print(actor.info())
+    print(actor.describe(), "\n\n\n")
+
+    movie = get_movie_df()
+    print(movie.info())
+    print(movie.describe())
 
 
 if __name__ == "__main__":
