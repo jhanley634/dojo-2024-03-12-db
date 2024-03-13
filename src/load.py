@@ -19,17 +19,23 @@ def load_rows() -> None:
 
     movie, actor, movie_actor = get_tables()
 
+    with get_session() as sess:
+        sess.execute(movie.delete())
     with get_engine().connect() as conn:
-        get_movie_df().to_sql("movie", conn.connection, if_exists="replace")
+        movie_df = get_movie_df().drop(columns=["genres"])
+        movie_df.to_sql("movie", conn.connection, if_exists="append", index=False)
 
     with get_session() as sess:
         sess.execute(actor.delete())
         sess.execute(movie_actor.delete())
-        for _, row in get_actor_df().head().iterrows():
+        for _, row in get_actor_df().iterrows():
             titles = row.titles
             d = row.to_dict()
             del d["titles"]
             sess.execute(actor.insert().values(d))
+            if titles.count(",") >= 4:
+                print(row.id, end="\t", flush=True)
+                sess.commit()
             for title in titles.split(","):
                 sess.execute(
                     movie_actor.insert().values(
@@ -37,8 +43,6 @@ def load_rows() -> None:
                         actor_id=row.id,
                     )
                 )
-                print(row.id, title)
-        sess.commit()
 
 
 if __name__ == "__main__":

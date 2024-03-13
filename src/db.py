@@ -28,7 +28,7 @@ def get_tables() -> Iterable[Table]:
     movie = Table(
         "movie",
         metadata,
-        Column("id", String(9), primary_key=True),
+        Column("id", String(10), primary_key=True),
         Column("title", String(200), nullable=False),
         Column("year", Integer(), nullable=False),
         Column("minutes", Integer(), nullable=False),
@@ -36,7 +36,7 @@ def get_tables() -> Iterable[Table]:
     actor = Table(
         "actor",
         metadata,
-        Column("id", String(9), primary_key=True),
+        Column("id", String(10), primary_key=True),
         Column("name", String(200), nullable=False),
         Column("born", Integer(), nullable=False),
         Column("died", Integer()),
@@ -44,8 +44,8 @@ def get_tables() -> Iterable[Table]:
     movie_actor = Table(
         "movie_actor",
         metadata,
-        Column("movie_id", String(9), primary_key=True),
-        Column("actor_id", String(9), primary_key=True),
+        Column("movie_id", String(10), primary_key=True),
+        Column("actor_id", String(10), primary_key=True),
     )
     tables = [movie, actor, movie_actor]
     metadata.create_all(get_engine(), tables)

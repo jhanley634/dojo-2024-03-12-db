@@ -12,13 +12,13 @@ def example_join() -> None:
     movie, actor, movie_actor = get_tables()
 
     with get_session() as sess:
-        breakpoint()
         q = (
-            sa.select(actor)
+            sa.select(actor, movie)
             .join(movie_actor, movie_actor.c.actor_id.is_(actor.c.id))
-            .where(actor.c.id == "nm0000001")
+            .join(movie, movie_actor.c.movie_id.is_(movie.c.id))
+            .where(actor.c.id < "nm00001")
             .order_by(actor.c.born)
-            .limit(6)
+            .limit(90)
         )
         for row in sess.execute(q):
             print(row._asdict())
