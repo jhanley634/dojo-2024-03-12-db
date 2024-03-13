@@ -12,7 +12,7 @@ ACTIVATE = source $(BIN)/activate $(PROJECT)
 
 lint:
 	$(ACTIVATE) && black . && isort . && ruff check
-	$(ACTIVATE) && mypy --no-namespace-packages --ignore-missing-imports .
+	$(ACTIVATE) && mypy --no-namespace-packages --ignore-missing-imports --strict .
 
 test:
 	$(ACTIVATE) && python --version

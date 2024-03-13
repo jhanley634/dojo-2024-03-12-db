@@ -91,11 +91,11 @@ def _read_parquet(
 
 def main() -> None:
     actor = get_actor_df()
-    print(actor.info())
+    actor.info()
     print(actor.describe(), "\n\n\n")
 
     movie = get_movie_df()
-    print(movie.info())
+    movie.info()
     print(movie.describe())
 
 
