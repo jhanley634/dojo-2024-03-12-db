@@ -18,12 +18,10 @@ def example_join() -> None:
             sa.select(actor, movie)
             .join(movie_actor, movie_actor.c.actor_id.is_(actor.c.id))
             .join(movie, movie_actor.c.movie_id.is_(movie.c.id))
-            .where(actor.c.id < "nm00001")
-            .order_by(actor.c.born)
-            .limit(90)
+            .where(movie_actor.c.actor_id < "nm00001")
+            .order_by(movie_actor.c.movie_id)
         )
-        for row in sess.execute(explain(q)):
-            print(row._asdict())
+        print("\n".join(map(str, sess.execute(explain(q)))))
         for row in sess.execute(q):
             print(row._asdict())
 

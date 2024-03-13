@@ -4,6 +4,8 @@
 
 from warnings import filterwarnings
 
+from sqlalchemy import Index
+
 from src.db import get_engine, get_session, get_tables
 from src.et import get_actor_df, get_movie_df
 
@@ -18,6 +20,8 @@ def load_rows() -> None:
     """Populates three DB tables with rows from the parquet files."""
 
     movie, actor, movie_actor = get_tables()
+
+    Index("am_idx", movie_actor.c.actor_id, movie_actor.c.movie_id).create(get_engine())
 
     with get_session() as sess:
         sess.execute(movie.delete())
