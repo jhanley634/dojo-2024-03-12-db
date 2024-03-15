@@ -21,6 +21,7 @@ class Actor(Base):
     name: Mapped[str] = mapped_column(String(200))
     born: Mapped[int] = mapped_column(Integer)
     died: Mapped[Optional[int]] = mapped_column(Integer)
+
     movies = relationship("MovieActor", cascade="all, delete-orphan")
 
 
@@ -31,6 +32,8 @@ class Movie(Base):
     title: Mapped[str] = mapped_column(String(200))
     year: Mapped[int] = mapped_column(Integer)
     minutes: Mapped[int] = mapped_column(Integer)
+
+    actors = relationship("MovieActor", cascade="all, delete-orphan")
 
 
 class MovieActor(Base):
@@ -43,5 +46,5 @@ class MovieActor(Base):
     actor_id: Mapped[str] = mapped_column(
         String(10), ForeignKey("actor.id"), primary_key=True
     )
-    movie = relationship(Movie, lazy="joined")
-    # actor = relationship(Actor, lazy="joined", overlaps="movies")
+    movie = relationship(Movie, lazy="joined", overlaps="actors")
+    actor = relationship(Actor, lazy="joined", overlaps="movies")
