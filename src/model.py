@@ -5,8 +5,8 @@
 
 from typing import Optional
 
-from sqlalchemy import Index, Integer, String
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import ForeignKey, Index, Integer, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
@@ -21,6 +21,7 @@ class Actor(Base):
     name: Mapped[str] = mapped_column(String(200))
     born: Mapped[int] = mapped_column(Integer)
     died: Mapped[Optional[int]] = mapped_column(Integer)
+    movies = relationship("MovieActor", cascade="all, delete-orphan")
 
 
 class Movie(Base):
@@ -36,5 +37,11 @@ class MovieActor(Base):
     __tablename__ = "movie_actor"
     __table_args__ = (Index("am_idx", "actor_id", "movie_id", unique=True),)
 
-    movie_id: Mapped[str] = mapped_column(String(10), primary_key=True)
-    actor_id: Mapped[str] = mapped_column(String(10), primary_key=True)
+    movie_id: Mapped[str] = mapped_column(
+        String(10), ForeignKey("movie.id"), primary_key=True
+    )
+    actor_id: Mapped[str] = mapped_column(
+        String(10), ForeignKey("actor.id"), primary_key=True
+    )
+    movie = relationship(Movie, lazy="joined")
+    # actor = relationship(Actor, lazy="joined", overlaps="movies")
