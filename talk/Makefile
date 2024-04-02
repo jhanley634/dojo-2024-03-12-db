@@ -1,8 +1,7 @@
 
 OUT = \
  out/ReadMe.html \
- out/01_bio.html \
- out/02_setup.html \
+ out/setup.html \
 
 all: $(OUT)
 
